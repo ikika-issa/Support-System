@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SupportSystemApp.Service.Interface
+namespace SupportSystemApp.Service.Interfaces
 {
     public interface ITicketExportService
     {
