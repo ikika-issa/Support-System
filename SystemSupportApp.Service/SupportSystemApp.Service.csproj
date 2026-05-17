@@ -12,10 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SupportSystemApp.Domain\SupportSystemApp.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Implementation\" />
+    <ProjectReference Include="..\SupportSystemApp.Repository\SupportSystemApp.Repository.csproj" />
   </ItemGroup>
 
 </Project>
