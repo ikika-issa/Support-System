@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SupportSystemApp.Service.Implementation
+namespace SupportSystemApp.Service.Interface
 {
     public interface ICategoryItemService
     {

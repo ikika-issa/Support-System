@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace SupportSystemApp.Service.Implementation
 {
     public class TicketService : ITicketService
@@ -27,7 +28,7 @@ namespace SupportSystemApp.Service.Implementation
             }
 
             _ticketRepository.Delete(ticket);
-            return ticket;  
+            return ticket;
         }
 
         public List<Ticket> GetAll()

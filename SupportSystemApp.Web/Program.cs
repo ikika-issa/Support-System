@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using SupportSystemApp.Domain.Identity;
 using SupportSystemApp.Repository;
+using SupportSystemApp.Service.Implementation;
 using SupportSystemApp.Service.Interface;
 
 
@@ -17,13 +19,13 @@ builder.Services.AddDefaultIdentity<SupportSystemAppUser>(options => options.Sig
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddTransient<ITicketService, TicketService>();
 builder.Services.AddTransient<INoteService, NoteService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ISubcategoryService, SubcategoryService>();
-
+builder.Services.AddTransient<ITicketExportService, TicketExportService>();
 
 var app = builder.Build();
 

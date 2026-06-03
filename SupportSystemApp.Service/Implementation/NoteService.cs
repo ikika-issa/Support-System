@@ -27,7 +27,7 @@ namespace SupportSystemApp.Service.Implementation
             }
 
             _noteRepository.Delete(note);
-            return note;    
+            return note;
         }
 
         public Note GetById(Guid id)

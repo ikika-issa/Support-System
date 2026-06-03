@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SupportSystemApp.Domain\SupportSystemApp.Domain.csproj" />
     <ProjectReference Include="..\SupportSystemApp.Repository\SupportSystemApp.Repository.csproj" />
+    <ProjectReference Include="..\SupportSystemApp.Service\SupportSystemApp.Service.csproj" />
   </ItemGroup>
 
 </Project>
