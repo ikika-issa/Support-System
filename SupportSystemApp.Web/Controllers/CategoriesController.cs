@@ -103,7 +103,7 @@ namespace SupportSystemApp.Web.Controllers
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public IActionResult DeleteConfirmed(Guid id)
         {
             var category = _categoryService.GetById(id);
 

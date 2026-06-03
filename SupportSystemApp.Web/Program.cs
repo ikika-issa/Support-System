@@ -26,6 +26,7 @@ builder.Services.AddTransient<INoteService, NoteService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ISubcategoryService, SubcategoryService>();
 builder.Services.AddTransient<ITicketExportService, TicketExportService>();
+builder.Services.AddTransient<ISiteService, SiteService>();
 
 var app = builder.Build();
 

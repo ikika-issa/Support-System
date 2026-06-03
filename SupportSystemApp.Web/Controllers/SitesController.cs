@@ -7,35 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SupportSystemApp.Domain.Domain;
 using SupportSystemApp.Repository;
+using SupportSystemApp.Service.Interface;
 
 namespace SupportSystemApp.Web.Controllers
 {
     public class SitesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ISiteService _siteService;
 
-        public SitesController(ApplicationDbContext context)
+        public SitesController(ISiteService siteService)
         {
-            _context = context;
-        }
+            _siteService = siteService;
+        } 
 
         // GET: Sites
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Sites.ToListAsync());
+            var sites = _siteService.GetAll();
+            return View(sites);
         }
 
         // GET: Sites/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public IActionResult Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var site = await _context.Sites
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (site == null)
+            var site = _siteService.GetById(id);
+            if (site  == null)
             {
                 return NotFound();
             }
@@ -54,31 +50,26 @@ namespace SupportSystemApp.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Location,Id")] Site site)
+        public IActionResult Create([Bind("Name,Location,Id")] Site site)
         {
             if (ModelState.IsValid)
             {
-                site.Id = Guid.NewGuid();
-                _context.Add(site);
-                await _context.SaveChangesAsync();
+                _siteService.Insert(site);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(site);
         }
 
         // GET: Sites/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var site = await _context.Sites.FindAsync(id);
+            var site = _siteService.GetById(id);
             if (site == null)
             {
                 return NotFound();
             }
+
             return View(site);
         }
 
@@ -87,7 +78,7 @@ namespace SupportSystemApp.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Location,Id")] Site site)
+        public IActionResult Edit(Guid id, [Bind("Name,Location,Id")] Site site)
         {
             if (id != site.Id)
             {
@@ -98,8 +89,7 @@ namespace SupportSystemApp.Web.Controllers
             {
                 try
                 {
-                    _context.Update(site);
-                    await _context.SaveChangesAsync();
+                    _siteService.Update(site);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,15 +108,10 @@ namespace SupportSystemApp.Web.Controllers
         }
 
         // GET: Sites/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var site = _siteService.GetById(id);
 
-            var site = await _context.Sites
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (site == null)
             {
                 return NotFound();
@@ -138,21 +123,21 @@ namespace SupportSystemApp.Web.Controllers
         // POST: Sites/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public IActionResult DeleteConfirmed(Guid id)
         {
-            var site = await _context.Sites.FindAsync(id);
+            var site = _siteService.GetById(id);
+
             if (site != null)
             {
-                _context.Sites.Remove(site);
+                _siteService.DeleteById(id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool SiteExists(Guid id)
         {
-            return _context.Sites.Any(e => e.Id == id);
+            return _siteService.GetById(id) != null;
         }
     }
 }

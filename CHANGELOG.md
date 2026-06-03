@@ -85,10 +85,10 @@ WEB LAYER
 - Adjust the controllers to use the services instead of ApplicationDbContext directly:
 	1. Note
 	2. Ticket
-	3. TicketTask
-	4. Sites
+	3. TicketTask [DONE]
+	4. Sites [DONE]
 	5. Subcategory
-	6. SupportGroup
+	6. SupportGroup [DONE]
 	7. Category [DONE]
 	8. CategoryItem
 
@@ -111,13 +111,25 @@ WEB LAYER
 DOMAIN LAYER
 ----------------------------
 
+
 SERVICE LAYER
 ----------------------------
 - Added a new Service (Interface and Implementation) for Attachments
+- Added a new Service (Interface and Implementation) for Sites
+- Added a new Service (Interface and Implementation) for SupportGroup
 
 
 WEB LAYER
 ----------------------------
 - Added the services to Program.cs
+- Added a new controller for Site 
 
 ### FIXED
+
+- Adjusted the controllers to use the services instead of ApplicationDbContext directly:
+	1. Note
+	2. Ticket [DONE]
+	3. TicketTask
+	4. Sites [DONE]
+	5. Subcategory [PARTIALLY DONE]
+	6. SupportGroup [DONE]

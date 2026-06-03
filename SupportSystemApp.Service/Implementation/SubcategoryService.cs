@@ -35,6 +35,11 @@ namespace SupportSystemApp.Service.Implementation
             return _subcategoryRepository.GetAll(selector: x => x, predicate: x => x.CategoryId == categoryId).ToList();
         }
 
+        public Subcategory GetByCategory(Guid categoryId)
+        {
+            return _subcategoryRepository.Get(selector: x => x, predicate: x => x.CategoryId == categoryId)!;
+        }
+
         public Subcategory GetById(Guid id)
         {
             return _subcategoryRepository.Get(selector: x => x, predicate: x => x.Id == id)!;

@@ -7,36 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SupportSystemApp.Domain.Domain;
 using SupportSystemApp.Repository;
+using SupportSystemApp.Service.Interface;
 
 namespace SupportSystemApp.Web.Controllers
 {
     public class SubcategoriesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ISubcategoryService _subcategoryService;
 
-        public SubcategoriesController(ApplicationDbContext context)
+        public SubcategoriesController(ISubcategoryService subcategoryService)
         {
-            _context = context;
+            _subcategoryService = subcategoryService;
         }
 
         // GET: Subcategories
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.SubCategories.Include(s => s.Category);
-            return View(await applicationDbContext.ToListAsync());
+            return View(_subcategoryService.GetAllByCategoryId(Guid.Empty));
         }
 
         // GET: Subcategories/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public IActionResult Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var subcategory = _subcategoryService.GetById(id);
 
-            var subcategory = await _context.SubCategories
-                .Include(s => s.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (subcategory == null)
             {
                 return NotFound();
@@ -48,7 +42,7 @@ namespace SupportSystemApp.Web.Controllers
         // GET: Subcategories/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            //ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
             return View();
         }
 
