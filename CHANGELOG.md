@@ -92,7 +92,7 @@ WEB LAYER
 	7. Category
 	8. CategoryItem
 
-- Implement the export functionality for exporting tickets to different formats (Excel, PDF, CSV etc.)
+- Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
 	- this should be implemented in the TicketService
 	- it should be added as an action in the TicketController
 - Implement creation of users
@@ -102,3 +102,9 @@ WEB LAYER
 - Create flexible creation for Roles
 	- these should implement editing of the roles to be able to add/remove permissions for each role
 - Implement different roles to be added to users (Admin, IT, Employee etc.)
+
+
+## 03-06-2026
+
+### ADDED
+### FIXED
