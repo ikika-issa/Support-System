@@ -80,8 +80,8 @@ WEB LAYER
 
 ### TO DO:
 
-- Adjust Program.cs to read the services in the Service layer
-- Adjust Program.cs to read the repository in the Repository layer
+- Adjust Program.cs to read the services in the Service layer [DONE]
+- Adjust Program.cs to read the repository in the Repository layer [DONE]
 - Adjust the controllers to use the services instead of ApplicationDbContext directly:
 	1. Note
 	2. Ticket
@@ -89,7 +89,7 @@ WEB LAYER
 	4. Sites
 	5. Subcategory
 	6. SupportGroup
-	7. Category
+	7. Category [DONE]
 	8. CategoryItem
 
 - Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
@@ -107,4 +107,17 @@ WEB LAYER
 ## 03-06-2026
 
 ### ADDED
+
+DOMAIN LAYER
+----------------------------
+
+SERVICE LAYER
+----------------------------
+- Added a new Service (Interface and Implementation) for Attachments
+
+
+WEB LAYER
+----------------------------
+- Added the services to Program.cs
+
 ### FIXED

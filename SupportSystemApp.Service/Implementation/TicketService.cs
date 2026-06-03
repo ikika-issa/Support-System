@@ -1,4 +1,5 @@
-﻿using SupportSystemApp.Domain.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using SupportSystemApp.Domain.Domain;
 using SupportSystemApp.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -33,12 +34,15 @@ namespace SupportSystemApp.Service.Implementation
 
         public List<Ticket> GetAll()
         {
-            return _ticketRepository.GetAll(selector: x => x).ToList();
+            return _ticketRepository.GetAll(selector: x => x, include: x => x.Include(t => t.AssignedTo)!.Include(t => t.OpenedBy)!.
+                Include(t => t.Site).Include(t => t.SupportGroup)!).ToList();
         }
 
         public Ticket GetById(Guid id)
         {
-            return _ticketRepository.Get(selector: x => x, predicate: x => x.Id == id)!;
+            return _ticketRepository.Get(selector: x => x, predicate: x => x.Id == id, 
+                include: x => x.Include(t => t.AssignedTo)!.Include(t => t.OpenedBy)!.
+                Include(t => t.Site).Include(t => t.SupportGroup)!)!;
         }
 
         public Ticket Insert(Ticket ticket)

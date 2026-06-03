@@ -7,39 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SupportSystemApp.Domain.Domain;
 using SupportSystemApp.Repository;
+using SupportSystemApp.Service.Interface;
 
 namespace SupportSystemApp.Web.Controllers
 {
     public class TicketsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITicketService _ticketService;
 
-        public TicketsController(ApplicationDbContext context)
+        public TicketsController(ITicketService ticketService)
         {
-            _context = context;
+            _ticketService = ticketService;
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.Tickets.Include(t => t.AssignedTo).Include(t => t.OpenedBy).Include(t => t.Site).Include(t => t.SupportGroup);
-            return View(await applicationDbContext.ToListAsync());
+            return View(_ticketService.GetAll());
         }
 
         // GET: Tickets/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public IActionResult Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var ticket = _ticketService.GetById(id);
 
-            var ticket = await _context.Tickets
-                .Include(t => t.AssignedTo)
-                .Include(t => t.OpenedBy)
-                .Include(t => t.Site)
-                .Include(t => t.SupportGroup)
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
                 return NotFound();
@@ -51,10 +42,6 @@ namespace SupportSystemApp.Web.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
-            ViewData["TechnitianId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["RequesterId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["SiteId"] = new SelectList(_context.Sites, "Id", "Id");
-            ViewData["SupportGroupId"] = new SelectList(_context.SupportGroups, "Id", "Id");
             return View();
         }
 
@@ -63,19 +50,23 @@ namespace SupportSystemApp.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TicketNumber,Header,Details,Status,Priority,CreatedAt,DueBy,ResolvedAt,RequesterId,TechnitianId,SiteId,SupportGroupId,Id")] Ticket ticket)
+        public IActionResult Create([Bind("TicketNumber,Header,Details,Status,Priority,CreatedAt,DueBy,ResolvedAt,RequesterId,TechnitianId,SiteId,SupportGroupId,Id")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                ticket.Id = Guid.NewGuid();
-                _context.Add(ticket);
-                await _context.SaveChangesAsync();
+                _ticketService.Insert(ticket);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TechnitianId"] = new SelectList(_context.Users, "Id", "Id", ticket.TechnitianId);
-            ViewData["RequesterId"] = new SelectList(_context.Users, "Id", "Id", ticket.RequesterId);
-            ViewData["SiteId"] = new SelectList(_context.Sites, "Id", "Id", ticket.SiteId);
-            ViewData["SupportGroupId"] = new SelectList(_context.SupportGroups, "Id", "Id", ticket.SupportGroupId);
+
+            //ViewBag.Technitians = new SelectList(_ticketService.GetAll()
+            //    .Select(c => new SelectListItem
+            //    {
+            //        Value = c.Id.ToString(),
+            //        //TO DO
+            //        Text = c.
+            //    })
+            //    .ToList();
+
             return View(ticket);
         }
 
