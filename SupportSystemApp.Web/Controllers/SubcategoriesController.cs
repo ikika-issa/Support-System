@@ -14,10 +14,12 @@ namespace SupportSystemApp.Web.Controllers
     public class SubcategoriesController : Controller
     {
         private readonly ISubcategoryService _subcategoryService;
+        private readonly ICategoryService _categoryService;
 
-        public SubcategoriesController(ISubcategoryService subcategoryService)
+        public SubcategoriesController(ISubcategoryService subcategoryService, ICategoryService categoryService)
         {
             _subcategoryService = subcategoryService;
+            _categoryService = categoryService;
         }
 
         // GET: Subcategories
@@ -42,51 +44,43 @@ namespace SupportSystemApp.Web.Controllers
         // GET: Subcategories/Create
         public IActionResult Create()
         {
-            //ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
+            ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name");
             return View();
         }
 
         // POST: Subcategories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,CategoryId,Id")] Subcategory subcategory)
+        public IActionResult Create([Bind("Name,CategoryId,Id")] Subcategory subcategory)
         {
             if (ModelState.IsValid)
             {
-                subcategory.Id = Guid.NewGuid();
-                _context.Add(subcategory);
-                await _context.SaveChangesAsync();
+                _subcategoryService.Insert(subcategory);
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", subcategory.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name", subcategory.CategoryId);
             return View(subcategory);
         }
 
         // GET: Subcategories/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var subcategory = _subcategoryService.GetById(id);
 
-            var subcategory = await _context.SubCategories.FindAsync(id);
             if (subcategory == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", subcategory.CategoryId);
+
+            ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name", subcategory.CategoryId);
             return View(subcategory);
         }
 
         // POST: Subcategories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,CategoryId,Id")] Subcategory subcategory)
+        public IActionResult Edit(Guid id, [Bind("Name,CategoryId,Id")] Subcategory subcategory)
         {
             if (id != subcategory.Id)
             {
@@ -97,8 +91,7 @@ namespace SupportSystemApp.Web.Controllers
             {
                 try
                 {
-                    _context.Update(subcategory);
-                    await _context.SaveChangesAsync();
+                    _subcategoryService.Update(subcategory);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -113,21 +106,15 @@ namespace SupportSystemApp.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", subcategory.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_categoryService.GetAll(), "Id", "Name", subcategory.CategoryId);
             return View(subcategory);
         }
 
         // GET: Subcategories/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var subcategory = _subcategoryService.GetById(id);
 
-            var subcategory = await _context.SubCategories
-                .Include(s => s.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (subcategory == null)
             {
                 return NotFound();
@@ -139,21 +126,20 @@ namespace SupportSystemApp.Web.Controllers
         // POST: Subcategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public IActionResult DeleteConfirmed(Guid id)
         {
-            var subcategory = await _context.SubCategories.FindAsync(id);
+            var subcategory = _subcategoryService.GetById(id);
             if (subcategory != null)
             {
-                _context.SubCategories.Remove(subcategory);
+                _subcategoryService.DeleteById(id);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool SubcategoryExists(Guid id)
         {
-            return _context.SubCategories.Any(e => e.Id == id);
+            return _subcategoryService.GetById(id) != null;
         }
     }
 }

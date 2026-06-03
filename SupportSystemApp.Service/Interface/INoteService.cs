@@ -10,6 +10,7 @@ namespace SupportSystemApp.Service.Interface
     public interface INoteService
     {
         public Note GetById(Guid id);
+        public List <Note> GetByTicket(Guid ticketId);
         public Note Insert(Note note);
         public Note Update(Note note);
         public Note DeleteById(Guid id);

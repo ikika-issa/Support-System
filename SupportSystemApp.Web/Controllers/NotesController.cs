@@ -7,23 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SupportSystemApp.Domain.Domain;
 using SupportSystemApp.Repository;
+using SupportSystemApp.Service.Interface;
 
 namespace SupportSystemApp.Web.Controllers
 {
     public class NotesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly INoteService _noteService;
 
-        public NotesController(ApplicationDbContext context)
+        public NotesController(INoteService noteService)
         {
-            _context = context;
+            _noteService = noteService;
         }
 
         // GET: Notes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Notes.Include(n => n.OpenedByUser);
-            return View(await applicationDbContext.ToListAsync());
+            var notesInTicket = 
+            return View();
         }
 
         // GET: Notes/Details/5

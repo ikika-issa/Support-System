@@ -1,4 +1,5 @@
 ﻿using SupportSystemApp.Domain.Domain;
+using SupportSystemApp.Domain.Domain_Models;
 using SupportSystemApp.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,12 @@ namespace SupportSystemApp.Service.Implementation
     public class NoteService : INoteService
     {
         private readonly IRepository<Note> _noteRepository;
+        private readonly IRepository<NoteInTicket> _noteInTicket;
 
-        public NoteService(IRepository<Note> noteRepository)
+        public NoteService(IRepository<Note> noteRepository, IRepository<NoteInTicket> noteInTicket)
         {
             _noteRepository = noteRepository;
+            _noteInTicket = noteInTicket;
         }
 
         public Note DeleteById(Guid id)
@@ -33,6 +36,11 @@ namespace SupportSystemApp.Service.Implementation
         public Note GetById(Guid id)
         {
             return _noteRepository.Get(selector: x => x, predicate: x => x.Id == id)!;
+        }
+
+        public List<Note> GetByTicket(Guid ticketId)
+        {
+            return _noteInTicket.GetAll(selector: x => x.Note, predicate: x => x.TicketId == ticketId).ToList();
         }
 
         public Note Insert(Note note)

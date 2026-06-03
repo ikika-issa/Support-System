@@ -41,4 +41,5 @@ public class ApplicationDbContext : IdentityDbContext<SupportSystemAppUser>
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Subcategory> SubCategories { get; set; }
     public virtual DbSet<CategoryItem> CategoryItems { get; set; }
+    public virtual DbSet<TaskInTicket> TaskInTickets { get; set; }
 }

@@ -84,10 +84,10 @@ WEB LAYER
 - Adjust Program.cs to read the repository in the Repository layer [DONE]
 - Adjust the controllers to use the services instead of ApplicationDbContext directly:
 	1. Note
-	2. Ticket
+	2. Ticket [DONE]
 	3. TicketTask [DONE]
 	4. Sites [DONE]
-	5. Subcategory
+	5. Subcategory [DONE]
 	6. SupportGroup [DONE]
 	7. Category [DONE]
 	8. CategoryItem
@@ -96,8 +96,8 @@ WEB LAYER
 	- this should be implemented in the TicketService
 	- it should be added as an action in the TicketController
 - Implement creation of users
-- Scaffold Login for User Authentication
-- Scaffold Logout for User Authentication
+- Scaffold Login for User Authentication [DONE]
+- Scaffold Logout for User Authentication [DONE]
 - Adjust Program.cs to read the Identity services
 - Create flexible creation for Roles
 	- these should implement editing of the roles to be able to add/remove permissions for each role
@@ -117,12 +117,15 @@ SERVICE LAYER
 - Added a new Service (Interface and Implementation) for Attachments
 - Added a new Service (Interface and Implementation) for Sites
 - Added a new Service (Interface and Implementation) for SupportGroup
+- Added a new Service (Interface and Implementation) for TicketTask
+- Added a search function for notes by Ticket ID in the NoteService
 
 
 WEB LAYER
 ----------------------------
 - Added the services to Program.cs
 - Added a new controller for Site 
+
 
 ### FIXED
 
@@ -131,5 +134,5 @@ WEB LAYER
 	2. Ticket [DONE]
 	3. TicketTask
 	4. Sites [DONE]
-	5. Subcategory [PARTIALLY DONE]
+	5. Subcategory [DONE]
 	6. SupportGroup [DONE]
