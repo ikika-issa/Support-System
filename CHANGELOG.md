@@ -76,4 +76,29 @@ WEB LAYER
 	7. Tickets
 	8. TicketTask
 	
-- Adjusted Program.cs to read the services in the Service layer
+- Scaffolded Identity for Register 
+
+### TO DO:
+
+- Adjust Program.cs to read the services in the Service layer
+- Adjust Program.cs to read the repository in the Repository layer
+- Adjust the controllers to use the services instead of ApplicationDbContext directly:
+	1. Note
+	2. Ticket
+	3. TicketTask
+	4. Sites
+	5. Subcategory
+	6. SupportGroup
+	7. Category
+	8. CategoryItem
+
+- Implement the export functionality for exporting tickets to different formats (Excel, PDF, CSV etc.)
+	- this should be implemented in the TicketService
+	- it should be added as an action in the TicketController
+- Implement creation of users
+- Scaffold Login for User Authentication
+- Scaffold Logout for User Authentication
+- Adjust Program.cs to read the Identity services
+- Create flexible creation for Roles
+	- these should implement editing of the roles to be able to add/remove permissions for each role
+- Implement different roles to be added to users (Admin, IT, Employee etc.)
