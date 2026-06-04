@@ -11,7 +11,7 @@ namespace SupportSystemApp.Service.Interface
     {
         public Note GetById(Guid id);
         public List <Note> GetByTicket(Guid ticketId);
-        public Note Insert(Note note);
+        public Note Insert(Note note, Guid ticketId);
         public Note Update(Note note);
         public Note DeleteById(Guid id);
     }

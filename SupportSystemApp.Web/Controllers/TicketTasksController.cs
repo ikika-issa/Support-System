@@ -1,43 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SupportSystemApp.Domain.Domain;
+using SupportSystemApp.Domain.Identity;
 using SupportSystemApp.Repository;
+using SupportSystemApp.Service.Implementation;
+using SupportSystemApp.Service.Interface;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SupportSystemApp.Web.Controllers
 {
     public class TicketTasksController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITicketTaskService _ticketTaskService;
+        private readonly ITicketService _ticketService;
+        private readonly UserManager<SupportSystemAppUser> _userManager;
+        private readonly ISupportGroupService _supportGroupService;
 
-        public TicketTasksController(ApplicationDbContext context)
+        public TicketTasksController(ITicketTaskService ticketTaskService, ITicketService ticketService
+            , UserManager<SupportSystemAppUser> userManager, ISupportGroupService supportGroupService)
         {
-            _context = context;
+            _ticketTaskService = ticketTaskService;
+            _ticketService = ticketService;
+            _userManager = userManager;
+            _supportGroupService = supportGroupService;
         }
 
-        // GET: TicketTasks
-        public async Task<IActionResult> Index()
+        public IActionResult Index(Guid ticketId)
         {
-            var applicationDbContext = _context.TicketTasks.Include(t => t.SupportGroup).Include(t => t.SupportSystemAppUser);
-            return View(await applicationDbContext.ToListAsync());
+            return View(_ticketTaskService.GetAllTasksByTicketId(ticketId));
         }
 
-        // GET: TicketTasks/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public IActionResult Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var ticketTask = _ticketTaskService.GetById(id);
 
-            var ticketTask = await _context.TicketTasks
-                .Include(t => t.SupportGroup)
-                .Include(t => t.SupportSystemAppUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (ticketTask == null)
             {
                 return NotFound();
@@ -46,57 +47,147 @@ namespace SupportSystemApp.Web.Controllers
             return View(ticketTask);
         }
 
-        // GET: TicketTasks/Create
+
         public IActionResult Create()
         {
-            ViewData["SupportGroupId"] = new SelectList(_context.SupportGroups, "Id", "Id");
-            ViewData["SupportSystemAppUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewBag.SupportGroups = _supportGroupService.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                })
+                .ToList();
+
+            ViewBag.Users = _userManager.Users
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.UserName
+                })
+                .ToList();
+
+            ViewBag.Priorities = Enum.GetValues(typeof(TicketPriority))
+                .Cast<TicketPriority>()
+                .Select(p => new SelectListItem
+                {
+                    Value = p.ToString(),
+                    Text = p.ToString()
+                })
+                .ToList();
+
+            ViewBag.Statuses = Enum.GetValues(typeof(TicketStatus))
+                .Cast<TicketStatus>()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.ToString(),
+                    Text = s.ToString()
+                })
+                .ToList();
+
+
             return View();
         }
 
-        // POST: TicketTasks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Status,Description,SupportGroupId,Priority,ScheduleStart,ScheduleEnd,SupportSystemAppUserId,TaskType,ActualStart,ActualEnd,Id")] TicketTask ticketTask)
+        public IActionResult Create([Bind("Title,Status,Description,SupportGroupId,Priority,ScheduleStart,ScheduleEnd,SupportSystemAppUserId,TaskType,ActualStart,ActualEnd,Id")] TicketTask ticketTask, Guid ticketId)
         {
             if (ModelState.IsValid)
             {
-                ticketTask.Id = Guid.NewGuid();
-                _context.Add(ticketTask);
-                await _context.SaveChangesAsync();
+                _ticketTaskService.Insert(ticketTask, ticketId);
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SupportGroupId"] = new SelectList(_context.SupportGroups, "Id", "Id", ticketTask.SupportGroupId);
-            ViewData["SupportSystemAppUserId"] = new SelectList(_context.Users, "Id", "Id", ticketTask.SupportSystemAppUserId);
+
+            ViewBag.SupportGroups = _supportGroupService.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                })
+                .ToList();
+
+            ViewBag.Users = _userManager.Users
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.UserName
+                })
+                .ToList();
+
+            ViewBag.Priorities = Enum.GetValues(typeof(TicketPriority))
+                .Cast<TicketPriority>()
+                .Select(p => new SelectListItem
+                {
+                    Value = p.ToString(),
+                    Text = p.ToString()
+                })
+                .ToList();
+
+            ViewBag.Statuses = Enum.GetValues(typeof(TicketStatus))
+                .Cast<TicketStatus>()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.ToString(),
+                    Text = s.ToString()
+                })
+                .ToList();
+
             return View(ticketTask);
         }
 
-        // GET: TicketTasks/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var ticketTask = _ticketTaskService.GetById(id);
 
-            var ticketTask = await _context.TicketTasks.FindAsync(id);
             if (ticketTask == null)
             {
                 return NotFound();
             }
-            ViewData["SupportGroupId"] = new SelectList(_context.SupportGroups, "Id", "Id", ticketTask.SupportGroupId);
-            ViewData["SupportSystemAppUserId"] = new SelectList(_context.Users, "Id", "Id", ticketTask.SupportSystemAppUserId);
+
+            ViewBag.SupportGroups = _supportGroupService.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                })
+                .ToList();
+
+            ViewBag.Users = _userManager.Users
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.UserName
+                })
+                .ToList();
+
+            ViewBag.Priorities = Enum.GetValues(typeof(TicketPriority))
+                .Cast<TicketPriority>()
+                .Select(p => new SelectListItem
+                {
+                    Value = p.ToString(),
+                    Text = p.ToString()
+                })
+                .ToList();
+
+            ViewBag.Statuses = Enum.GetValues(typeof(TicketStatus))
+                .Cast<TicketStatus>()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.ToString(),
+                    Text = s.ToString()
+                })
+                .ToList();
+
             return View(ticketTask);
         }
 
-        // POST: TicketTasks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Title,Status,Description,SupportGroupId,Priority,ScheduleStart,ScheduleEnd,SupportSystemAppUserId,TaskType,ActualStart,ActualEnd,Id")] TicketTask ticketTask)
+        public IActionResult Edit(Guid id, [Bind("Title,Status,Description,SupportGroupId,Priority,ScheduleStart," +
+            "ScheduleEnd,SupportSystemAppUserId,TaskType,ActualStart,ActualEnd,Id")] TicketTask ticketTask)
         {
             if (id != ticketTask.Id)
             {
@@ -107,8 +198,7 @@ namespace SupportSystemApp.Web.Controllers
             {
                 try
                 {
-                    _context.Update(ticketTask);
-                    await _context.SaveChangesAsync();
+                    _ticketTaskService.Update(ticketTask);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,23 +213,48 @@ namespace SupportSystemApp.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SupportGroupId"] = new SelectList(_context.SupportGroups, "Id", "Id", ticketTask.SupportGroupId);
-            ViewData["SupportSystemAppUserId"] = new SelectList(_context.Users, "Id", "Id", ticketTask.SupportSystemAppUserId);
+
+            ViewBag.SupportGroups = _supportGroupService.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                })
+                .ToList();
+
+            ViewBag.Users = _userManager.Users
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.UserName
+                })
+                .ToList();
+
+            ViewBag.Priorities = Enum.GetValues(typeof(TicketPriority))
+                .Cast<TicketPriority>()
+                .Select(p => new SelectListItem
+                {
+                    Value = p.ToString(),
+                    Text = p.ToString()
+                })
+                .ToList();
+
+            ViewBag.Statuses = Enum.GetValues(typeof(TicketStatus))
+                .Cast<TicketStatus>()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.ToString(),
+                    Text = s.ToString()
+                })
+                .ToList();
+
             return View(ticketTask);
         }
 
-        // GET: TicketTasks/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var ticketTask = _ticketTaskService.GetById(id);
 
-            var ticketTask = await _context.TicketTasks
-                .Include(t => t.SupportGroup)
-                .Include(t => t.SupportSystemAppUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (ticketTask == null)
             {
                 return NotFound();
@@ -148,24 +263,24 @@ namespace SupportSystemApp.Web.Controllers
             return View(ticketTask);
         }
 
-        // POST: TicketTasks/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public IActionResult DeleteConfirmed(Guid id, Guid ticketId)
         {
-            var ticketTask = await _context.TicketTasks.FindAsync(id);
+            var ticketTask = _ticketTaskService.GetById(id);
+
             if (ticketTask != null)
             {
-                _context.TicketTasks.Remove(ticketTask);
+                _ticketTaskService.Delete(id, ticketId);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TicketTaskExists(Guid id)
         {
-            return _context.TicketTasks.Any(e => e.Id == id);
+            return _ticketTaskService.GetById(id) != null;
         }
     }
 }

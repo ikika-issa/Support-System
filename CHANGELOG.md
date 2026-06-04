@@ -83,7 +83,7 @@ WEB LAYER
 - Adjust Program.cs to read the services in the Service layer [DONE]
 - Adjust Program.cs to read the repository in the Repository layer [DONE]
 - Adjust the controllers to use the services instead of ApplicationDbContext directly:
-	1. Note
+	1. Note [DONE]
 	2. Ticket [DONE]
 	3. TicketTask [DONE]
 	4. Sites [DONE]
@@ -104,13 +104,9 @@ WEB LAYER
 - Implement different roles to be added to users (Admin, IT, Employee etc.)
 
 
-## 03-06-2026
+## 03-06-2026 AND 04-06-2026
 
 ### ADDED
-
-DOMAIN LAYER
-----------------------------
-
 
 SERVICE LAYER
 ----------------------------
@@ -130,9 +126,29 @@ WEB LAYER
 ### FIXED
 
 - Adjusted the controllers to use the services instead of ApplicationDbContext directly:
-	1. Note
+	1. Note [DONE]
 	2. Ticket [DONE]
-	3. TicketTask
+	3. TicketTask [DONE]
 	4. Sites [DONE]
 	5. Subcategory [DONE]
 	6. SupportGroup [DONE]
+- Fixed the Note Service function for insert to insert a note in the DB, but also insert a record in the NoteInTicket table to link the note to the ticket
+- Fixed the TicketTask Service function for inserting in the Relational table for Ticket and Task
+- Fixed the TicketTask Service function for deleting in the Relational table for Ticket and Task
+- Fixed in Tickets Controller to add the drop down menus in the GET Create function
+
+
+### TO DO:
+
+- Adjust the controllers to use the services instead of ApplicationDbContext directly:
+	1. CategoryItem
+
+- Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
+	- this should be implemented in the TicketService
+	- it should be added as an action in the TicketController
+- Implement creation of users
+- Adjust Program.cs to read the Identity services
+- Create flexible creation for Roles
+	- these should implement editing of the roles to be able to add/remove permissions for each role
+- Implement different roles to be added to users (Admin, IT, Employee etc.)
+- Fix all warnings across App (33 warnings)

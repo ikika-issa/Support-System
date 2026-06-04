@@ -11,8 +11,9 @@ namespace SupportSystemApp.Service.Interface
     {
         List<TicketTask> GetAllTasksByTicketId(Guid ticketId);
         TicketTask GetTaskById(Guid taskId);
-        TicketTask Insert(TicketTask task);
+        TicketTask GetById(Guid taskId);
+        TicketTask Insert(TicketTask task, Guid ticketId);
         TicketTask Update(TicketTask task);
-        TicketTask Delete(Guid taskId);
+        TicketTask Delete(Guid taskId, Guid ticketId);
     }
 }

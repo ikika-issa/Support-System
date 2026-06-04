@@ -43,9 +43,17 @@ namespace SupportSystemApp.Service.Implementation
             return _noteInTicket.GetAll(selector: x => x.Note, predicate: x => x.TicketId == ticketId).ToList();
         }
 
-        public Note Insert(Note note)
+        public Note Insert(Note note, Guid ticketId)
         {
             note.Id = Guid.NewGuid();
+
+            _noteInTicket.Insert(new NoteInTicket
+            {
+                Id = Guid.NewGuid(),
+                NoteId = note.Id,
+                TicketId = ticketId
+            });
+
             return _noteRepository.Insert(note);
         }
 

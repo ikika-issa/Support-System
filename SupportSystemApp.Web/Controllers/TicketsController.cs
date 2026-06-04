@@ -51,6 +51,48 @@ namespace SupportSystemApp.Web.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
+            ViewBag.Sites = _siteService.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                })
+                .ToList();
+
+            ViewBag.SupportGroups = _supportGroupService.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                })
+                .ToList();
+
+            ViewBag.Users = _userManager.Users
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = u.UserName
+                })
+                .ToList();
+
+            ViewBag.Priorities = Enum.GetValues(typeof(TicketPriority))
+                .Cast<TicketPriority>()
+                .Select(p => new SelectListItem
+                {
+                    Value = p.ToString(),
+                    Text = p.ToString()
+                })
+                .ToList();
+
+            ViewBag.Statuses = Enum.GetValues(typeof(TicketStatus))
+                .Cast<TicketStatus>()
+                .Select(s => new SelectListItem
+                {
+                    Value = s.ToString(),
+                    Text = s.ToString()
+                })
+                .ToList();
+
             return View();
         }
 
