@@ -80,16 +80,16 @@
                 @Html.DisplayFor(modelItem => item.ResolvedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OpenedBy.Id)
+                @Html.DisplayFor(modelItem => item.OpenedBy!.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedTo.Id)
+                @Html.DisplayFor(modelItem => item.AssignedTo!.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Site.Id)
+                @Html.DisplayFor(modelItem => item.Site!.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SupportGroup.Id)
+                @Html.DisplayFor(modelItem => item.SupportGroup!.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

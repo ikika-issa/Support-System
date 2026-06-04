@@ -62,7 +62,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SupportGroup.Id)
+                @Html.DisplayFor(modelItem => item.SupportGroup!.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Priority)
@@ -74,7 +74,7 @@
                 @Html.DisplayFor(modelItem => item.ScheduleEnd)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SupportSystemAppUser.Id)
+                @Html.DisplayFor(modelItem => item.SupportSystemAppUser!.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TaskType)

@@ -27,6 +27,9 @@ builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ISubcategoryService, SubcategoryService>();
 builder.Services.AddTransient<ITicketExportService, TicketExportService>();
 builder.Services.AddTransient<ISiteService, SiteService>();
+builder.Services.AddTransient<ICategoryItemService, CategoryItemService>();
+builder.Services.AddTransient<ISupportGroupService, SupportGroupService>();
+builder.Services.AddTransient<IAttachmentService, AttachmentService>();
 
 var app = builder.Build();
 

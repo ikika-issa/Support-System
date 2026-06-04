@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SupportSystemApp.Domain.Domain;
+using SupportSystemApp.Domain.Domain_Models;
 using SupportSystemApp.Domain.Identity;
 
 namespace SupportSystemApp.Repository;
@@ -42,4 +43,6 @@ public class ApplicationDbContext : IdentityDbContext<SupportSystemAppUser>
     public virtual DbSet<Subcategory> SubCategories { get; set; }
     public virtual DbSet<CategoryItem> CategoryItems { get; set; }
     public virtual DbSet<TaskInTicket> TaskInTickets { get; set; }
+    public virtual DbSet<Permission> Permissions { get; set; }
+    public virtual DbSet<RolePermission> RolePermissions { get; set; }
 }

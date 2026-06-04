@@ -90,7 +90,6 @@ WEB LAYER
 	5. Subcategory [DONE]
 	6. SupportGroup [DONE]
 	7. Category [DONE]
-	8. CategoryItem
 
 - Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
 	- this should be implemented in the TicketService
@@ -108,6 +107,17 @@ WEB LAYER
 
 ### ADDED
 
+DOMAIN LAYER
+----------------------------
+- Added a new Permission Domain Model
+- Added RolePermission Domain Model for permissions based on a role
+
+
+REPOSITORY LAYER
+----------------------------
+- Updated ApplicationDbContext for Permission and RolePermission Db
+
+
 SERVICE LAYER
 ----------------------------
 - Added a new Service (Interface and Implementation) for Attachments
@@ -115,6 +125,7 @@ SERVICE LAYER
 - Added a new Service (Interface and Implementation) for SupportGroup
 - Added a new Service (Interface and Implementation) for TicketTask
 - Added a search function for notes by Ticket ID in the NoteService
+- Added a Service Implementation for CategoryItemService
 
 
 WEB LAYER
@@ -140,9 +151,6 @@ WEB LAYER
 
 ### TO DO:
 
-- Adjust the controllers to use the services instead of ApplicationDbContext directly:
-	1. CategoryItem
-
 - Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
 	- this should be implemented in the TicketService
 	- it should be added as an action in the TicketController
@@ -151,4 +159,4 @@ WEB LAYER
 - Create flexible creation for Roles
 	- these should implement editing of the roles to be able to add/remove permissions for each role
 - Implement different roles to be added to users (Admin, IT, Employee etc.)
-- Fix all warnings across App (33 warnings)
+- Fix all warnings across App (33 warnings) [DONE]
