@@ -134,6 +134,10 @@ WEB LAYER
 - Added a new controller for Site 
 
 
+TEST LAYER
+----------------------------
+- Added a test layer to test the basic CRUD functions in the Services so less manual testing is needed
+
 ### FIXED
 
 - Adjusted the controllers to use the services instead of ApplicationDbContext directly:
@@ -147,6 +151,7 @@ WEB LAYER
 - Fixed the TicketTask Service function for inserting in the Relational table for Ticket and Task
 - Fixed the TicketTask Service function for deleting in the Relational table for Ticket and Task
 - Fixed in Tickets Controller to add the drop down menus in the GET Create function
+- Tidied up unnecessary comments in the Controllers
 
 
 ### TO DO:
@@ -154,9 +159,29 @@ WEB LAYER
 - Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
 	- this should be implemented in the TicketService
 	- it should be added as an action in the TicketController
-- Implement creation of users
+- Implement creation of users [DONE]
 - Adjust Program.cs to read the Identity services
-- Create flexible creation for Roles
-	- these should implement editing of the roles to be able to add/remove permissions for each role
+- Create flexible creation for Roles [DONE]
+	- these should implement editing of the roles to be able to add/remove permissions for each role [DONE]
 - Implement different roles to be added to users (Admin, IT, Employee etc.)
 - Fix all warnings across App (33 warnings) [DONE]
+
+
+### 04-06-2026
+
+### TO DO:
+
+- Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
+	- this should be implemented in the TicketService
+	- it should be added as an action in the TicketController
+- Adjust Program.cs to read the Identity services
+- Implement different roles to be added to users (Admin, IT, Employee etc.)
+- Add test classes for:
+	1. TicketService
+	2. TicketTaskService
+	3. NoteService
+	4. CategoryService [DONE]
+	5. SubcategoryService
+	6. CategoryItemService
+	7. SupportGroupService
+	8. SiteService
