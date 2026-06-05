@@ -34,8 +34,9 @@ namespace SupportSystemApp.Service.Implementation
 
         public List<Ticket> GetAll()
         {
-            return _ticketRepository.GetAll(selector: x => x, include: x => x.Include(t => t.AssignedTo)!.Include(t => t.OpenedBy)!.
-                Include(t => t.Site).Include(t => t.SupportGroup)!).ToList();
+            return _ticketRepository.GetAll(selector: x => x, 
+                include: x => x.Include(t => t.AssignedTo).Include(t => t.OpenedBy).
+                Include(t => t.Site).Include(t => t.SupportGroup)).ToList();
         }
 
         public Ticket GetById(Guid id)

@@ -1,6 +1,7 @@
 ﻿using SupportSystemApp.Domain.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace SupportSystemApp.Domain.Domain
     public class Ticket : BaseEntity
     {
         public string? TicketNumber { get; set; }
+
+        [Required(ErrorMessage ="Must not be left empty!")]
         public string? Header { get; set; }
         public string? Details { get; set; }
         public TicketStatus? Status { get; set; }
@@ -18,6 +21,7 @@ namespace SupportSystemApp.Domain.Domain
         public DateTime? DueBy { get; set; }
         public DateTime? ResolvedAt { get; set; }
 
+        [Required(ErrorMessage ="Please choose requester!")]
         public string? RequesterId { get; set; }
         public virtual SupportSystemAppUser? OpenedBy { get; set; }
 
@@ -27,6 +31,7 @@ namespace SupportSystemApp.Domain.Domain
         public virtual Site? Site { get; set; }
         public Guid? SupportGroupId { get; set; }
         public virtual SupportGroup? SupportGroup { get; set; }
+
         public virtual ICollection<TicketTask>? TicketTasks { get; set; }
         public virtual ICollection<Note>? Notes { get; set; }
         public virtual ICollection<Attachment>? Attachments { get; set; }

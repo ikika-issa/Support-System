@@ -26,6 +26,30 @@ namespace SupportSystemApp.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sites",
                 columns: table => new
                 {
@@ -86,6 +110,50 @@ namespace SupportSystemApp.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SubCategories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubCategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubCategories_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolePermissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PermissionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -116,6 +184,25 @@ namespace SupportSystemApp.Repository.Migrations
                         column: x => x.SupportGroupId,
                         principalTable: "SupportGroups",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubcategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CategoryItems_SubCategories_SubcategoryId",
+                        column: x => x.SubcategoryId,
+                        principalTable: "SubCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -337,8 +424,7 @@ namespace SupportSystemApp.Repository.Migrations
                     Priority = table.Column<int>(type: "int", nullable: true),
                     ScheduleStart = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ScheduleEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SupportSystemAppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SupportSystemAppUserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SupportSystemAppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     TaskType = table.Column<int>(type: "int", nullable: true),
                     ActualStart = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ActualEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -349,8 +435,8 @@ namespace SupportSystemApp.Repository.Migrations
                 {
                     table.PrimaryKey("PK_TicketTasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TicketTasks_AspNetUsers_SupportSystemAppUserId1",
-                        column: x => x.SupportSystemAppUserId1,
+                        name: "FK_TicketTasks_AspNetUsers_SupportSystemAppUserId",
+                        column: x => x.SupportSystemAppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -409,6 +495,31 @@ namespace SupportSystemApp.Repository.Migrations
                         column: x => x.TicketId,
                         principalTable: "Tickets",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TaskInTickets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskInTickets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskInTickets_TicketTasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "TicketTasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TaskInTickets_Tickets_TicketId",
+                        column: x => x.TicketId,
+                        principalTable: "Tickets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -476,6 +587,11 @@ namespace SupportSystemApp.Repository.Migrations
                 column: "TicketTaskId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CategoryItems_SubcategoryId",
+                table: "CategoryItems",
+                column: "SubcategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmailMessages_TicketId",
                 table: "EmailMessages",
                 column: "TicketId");
@@ -488,6 +604,31 @@ namespace SupportSystemApp.Repository.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_TicketId",
                 table: "Notes",
+                column: "TicketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermissions_PermissionId",
+                table: "RolePermissions",
+                column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermissions_RoleId",
+                table: "RolePermissions",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubCategories_CategoryId",
+                table: "SubCategories",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskInTickets_TaskId",
+                table: "TaskInTickets",
+                column: "TaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskInTickets_TicketId",
+                table: "TaskInTickets",
                 column: "TicketId");
 
             migrationBuilder.CreateIndex(
@@ -531,9 +672,9 @@ namespace SupportSystemApp.Repository.Migrations
                 column: "SupportGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TicketTasks_SupportSystemAppUserId1",
+                name: "IX_TicketTasks_SupportSystemAppUserId",
                 table: "TicketTasks",
-                column: "SupportSystemAppUserId1");
+                column: "SupportSystemAppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TicketTasks_TaskReminderId",
@@ -568,19 +709,37 @@ namespace SupportSystemApp.Repository.Migrations
                 name: "Attachments");
 
             migrationBuilder.DropTable(
+                name: "CategoryItems");
+
+            migrationBuilder.DropTable(
                 name: "EmailMessages");
+
+            migrationBuilder.DropTable(
+                name: "RolePermissions");
+
+            migrationBuilder.DropTable(
+                name: "TaskInTickets");
 
             migrationBuilder.DropTable(
                 name: "TicketShares");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
                 name: "Notes");
 
             migrationBuilder.DropTable(
+                name: "SubCategories");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
+
+            migrationBuilder.DropTable(
                 name: "TicketTasks");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "TaskReminders");

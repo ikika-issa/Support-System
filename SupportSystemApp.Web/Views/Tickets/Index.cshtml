@@ -1,102 +1,150 @@
-﻿@model IEnumerable<SupportSystemApp.Domain.Domain.Ticket>
+﻿@using SupportSystemApp.Domain.Domain
+@model IEnumerable<SupportSystemApp.Domain.Domain.Ticket>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+        <h4 class="mb-0">Tickets</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TicketNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Header)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Details)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Priority)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedAt)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DueBy)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResolvedAt)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OpenedBy)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AssignedTo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Site)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SupportGroup)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TicketNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Header)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Details)
+                        </td>
+                        <td>
+                            @switch (item.Status)
+                            {
+                                case TicketStatus.Open:
+                                    <span class="badge bg-primary">Open</span>
+                                    break;
+
+                                case TicketStatus.InProgress:
+                                    <span class="badge bg-warning text-dark">In Progress</span>
+                                    break;
+                                case TicketStatus.Closed:
+                                    <span class="badge bg-secondary">Closed</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            @switch (item.Priority)
+                            {
+                                case TicketPriority.Low:
+                                    <span class="badge bg-success">Low</span>
+                                    break;
+
+                                case TicketPriority.Medium:
+                                    <span class="badge bg-warning text-dark">Medium</span>
+                                    break;
+
+                                case TicketPriority.High:
+                                    <span class="badge bg-danger">High</span>
+                                    break;
+
+                                case TicketPriority.Urgent:
+                                    <span class="badge bg-dark">Critical</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedAt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DueBy)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResolvedAt)
+                        </td>
+                        <td>
+                            @(item.OpenedBy?.UserName ?? "N/A")
+                        </td>
+                        <td>
+                            @(item.AssignedTo?.UserName ?? "Unassigned")
+                        </td>
+                        <td>
+                            @(item.Site?.Name ?? "N/A")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SupportGroup!.Id)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id"
+                               class="btn btn-sm btn-primary">
+                                View
+                            </a>
+
+                            <a asp-action="Edit" asp-route-id="@item.Id"
+                               class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@item.Id"
+                               class="btn btn-sm btn-danger">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Header)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Details)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DueBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResolvedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OpenedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AssignedTo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Site)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SupportGroup)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Header)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Details)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DueBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResolvedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OpenedBy!.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedTo!.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Site!.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SupportGroup!.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

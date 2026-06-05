@@ -349,6 +349,27 @@ namespace SupportSystemApp.Repository.Migrations
                     b.ToTable("SupportGroups");
                 });
 
+            modelBuilder.Entity("SupportSystemApp.Domain.Domain.TaskInTicket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TaskId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TaskInTickets");
+                });
+
             modelBuilder.Entity("SupportSystemApp.Domain.Domain.TaskReminder", b =>
                 {
                     b.Property<Guid>("Id")
@@ -506,6 +527,43 @@ namespace SupportSystemApp.Repository.Migrations
                     b.HasIndex("TicketId");
 
                     b.ToTable("TicketTasks");
+                });
+
+            modelBuilder.Entity("SupportSystemApp.Domain.Domain_Models.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("SupportSystemApp.Domain.Domain_Models.RolePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("SupportSystemApp.Domain.Identity.SupportSystemAppUser", b =>
@@ -706,6 +764,25 @@ namespace SupportSystemApp.Repository.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("SupportSystemApp.Domain.Domain.TaskInTicket", b =>
+                {
+                    b.HasOne("SupportSystemApp.Domain.Domain.TicketTask", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SupportSystemApp.Domain.Domain.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Task");
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("SupportSystemApp.Domain.Domain.Ticket", b =>
                 {
                     b.HasOne("SupportSystemApp.Domain.Identity.SupportSystemAppUser", "OpenedBy")
@@ -781,6 +858,25 @@ namespace SupportSystemApp.Repository.Migrations
                     b.Navigation("SupportSystemAppUser");
 
                     b.Navigation("TaskReminder");
+                });
+
+            modelBuilder.Entity("SupportSystemApp.Domain.Domain_Models.RolePermission", b =>
+                {
+                    b.HasOne("SupportSystemApp.Domain.Domain_Models.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("SupportSystemApp.Domain.Identity.SupportSystemAppUser", b =>
