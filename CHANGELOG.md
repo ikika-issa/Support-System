@@ -167,10 +167,17 @@ TEST LAYER
 - Fix all warnings across App (33 warnings) [DONE]
 
 
-### 04-06-2026
+## 04-06-2026
 
 ### TO DO:
 
+-Implement seeder for first admin account in Repository [DONE]
+- Fix Ticket Views for CRUD:
+	1. Create
+	2. Read (Index)
+	2. Edit
+	4. Update
+	5. Delete
 - Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
 	- this should be implemented in the TicketService
 	- it should be added as an action in the TicketController
@@ -185,3 +192,28 @@ TEST LAYER
 	6. CategoryItemService
 	7. SupportGroupService
 	8. SiteService
+
+
+## 05-06-2026
+
+### TO DO:
+
+- Fix Ticket Views for CRUD:
+	1. Create
+	2. Read (Index)
+	2. Edit
+	4. Update
+	5. Delete
+- Implement the export functionality(TicketExportService) for exporting tickets to different formats (Excel, PDF, CSV etc.)
+	- this should be implemented in the TicketService
+	- it should be added as an action in the TicketController
+- Adjust Program.cs to read the Identity services
+- Implement different roles to be added to users (Admin, IT, Employee etc.)
+- Add test classes for:
+	1. TicketService
+	2. TicketTaskService
+	3. NoteService
+	4. SubcategoryService
+	5. CategoryItemService
+	6. SupportGroupService
+	7. SiteService
